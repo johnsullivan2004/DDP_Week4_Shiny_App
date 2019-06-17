@@ -1,0 +1,75 @@
+LMer - the Pitch
+========================================================
+autosize: true
+author: John Sullivan
+date: 6/16/2019
+
+Developing Data Products - Week 4 Assignment 
+
+
+What is LMer?
+========================================================
+
+LMer is a R Shiny Web App developed by John Sullivan for the Coursera Developing Data Products - Week 4 Assignment
+
+- App generates a set of data points from 1 to *n* (you specify *n*) based upon the simple equation: ***y=x***
+- It adds random offset to each point for both x and y based upon a random seed and distortion input you specify
+- It fits a linear regression (least squares) to the resulting points so that you can see how the random noise affects the output
+
+**What's the point?**  
+It allows you to experiment with how noise changes the line fit - both in the slope and the R^2 !
+
+Using LMer
+========================================================
+
+
+**Usage is simple:**
+- Select the number of points you want in the "Number of Points" text box
+- Use the slides to select "X & Y Distortion"" (noise) from 0 to 100 (percent)
+- Change the seed in the next text box
+- Select the check box to turn the resulting fitted equation off/on
+
+**Enjoy!**
+
+Example of output:
+========================================================
+
+Inputs:
+Points in Line = 100, X & Y Distortion = 20, Seed = 10000, Show Fit = TRUE
+
+```{r example,echo=FALSE,fig.width=8,fig.height=3.5,dpi=300,out.width="1250px",out.height="500px"}
+       set.seed(10000)
+       numpoints <- 100
+       xdistortion <- 20/100*100
+       ydistortion <- 20/100*100
+       xpoints <- seq(1,numpoints,1) + runif(numpoints, -1*xdistortion,xdistortion)
+       ypoints <- seq(1,numpoints,1) + runif(numpoints, -1*ydistortion,ydistortion)
+       
+       model_fit <- lm(ypoints ~ xpoints)
+       cf <- round(coef(model_fit), 2) 
+       rsqr <- round(summary(model_fit)$r.squared,2)
+       eq <- paste0("   y = ", cf[1],
+                    ifelse(sign(cf[2])==1, " + ", " - "), abs(cf[2]), " x ",
+                    "  R2 = ",rsqr)
+       
+       #Plot with Equation
+       plot(xpoints,ypoints,main="Data Points and Fitted Line")
+       abline(model_fit)
+       mtext(eq, 3, line=-2, adj=0, col=2)
+```
+
+Links:
+========================================================
+
+
+Link to the Application itself:  
+https://johnsullivan2004.shinyapps.io/LMer/
+
+
+Link to github pages with App code:  
+https://github.com/johnsullivan2004/DDP_Week4_Shiny_App
+
+
+Link to this pitch presentation:  
+http://rpubs.com/johnsullivan2004/DDP_Week4
+
